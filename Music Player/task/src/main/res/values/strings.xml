@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Music Player</string>
+    <string name="search">Search</string>
+    <string name="play_pause">play/pause</string>
+    <string name="stop">stop</string>
+    <string name="add_playlist">Add Playlist</string>
+    <string name="load_playlist">Load Playlist</string>
+    <string name="delete_playlist">Delete Playlist</string>
+    <string name="no_songs_loaded">no songs loaded, click search to load songs</string>
+    <string name="choose_playlist_to_load">choose playlist to load</string>
+    <string name="choose_playlist_to_delete">choose playlist to delete</string>
+    <string name="no_songs_found">no songs found</string>
+</resources>
