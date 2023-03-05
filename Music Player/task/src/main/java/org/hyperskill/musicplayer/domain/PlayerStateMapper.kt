@@ -1,5 +1,6 @@
 package org.hyperskill.musicplayer.domain
 
+import org.hyperskill.musicplayer.ui.SongMapper
 import org.hyperskill.musicplayer.ui.UiState
 
 interface PlayerStateMapper<T> {

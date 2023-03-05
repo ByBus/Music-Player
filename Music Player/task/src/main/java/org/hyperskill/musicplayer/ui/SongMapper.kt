@@ -1,6 +1,6 @@
-package org.hyperskill.musicplayer.domain
+package org.hyperskill.musicplayer.ui
 
-import org.hyperskill.musicplayer.ui.SongUi
+import org.hyperskill.musicplayer.domain.Mode
 import java.util.concurrent.TimeUnit
 
 interface SongMapper<T> {

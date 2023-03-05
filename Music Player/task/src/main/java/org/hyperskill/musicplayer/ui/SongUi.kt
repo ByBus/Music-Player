@@ -1,7 +1,6 @@
 package org.hyperskill.musicplayer.ui
 
 import org.hyperskill.musicplayer.R
-import org.hyperskill.musicplayer.domain.SongMapper
 
 abstract class SongUi(
     open val id: Long,

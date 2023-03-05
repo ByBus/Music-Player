@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.hyperskill.musicplayer.databinding.ActivityMainBinding
-import org.hyperskill.musicplayer.domain.SongMapper
+import org.hyperskill.musicplayer.ui.SongMapper
 import org.hyperskill.musicplayer.ui.*
 
 class MainActivity : AppCompatActivity() {

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.hyperskill.musicplayer.R
 import org.hyperskill.musicplayer.databinding.ListItemSongBinding
 import org.hyperskill.musicplayer.databinding.ListItemSongSelectorBinding
-import org.hyperskill.musicplayer.domain.SongMapper
 
 class PlaylistAdapter(
     private val clickListener: ClickListener,

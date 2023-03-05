@@ -1,5 +1,7 @@
 package org.hyperskill.musicplayer.domain
 
+import org.hyperskill.musicplayer.ui.SongMapper
+
 data class Song(
     val id: Long,
     val title: String,
