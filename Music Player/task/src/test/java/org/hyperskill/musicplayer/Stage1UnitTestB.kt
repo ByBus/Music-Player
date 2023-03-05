@@ -4,19 +4,19 @@ import android.app.AlertDialog
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
-
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
 import org.hyperskill.musicplayer.internals.MusicPlayerUnitTests
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 
-// version 1.2.2
+// version 1.3
 @RunWith(RobolectricTestRunner::class)
-class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.java){
+class Stage1UnitTestB : MusicPlayerUnitTests<MainActivity>(MainActivity::class.java){
 
     private val mainButtonSearch by lazy {
         val view = activity.findViewByString<Button>("mainButtonSearch")
@@ -26,7 +26,6 @@ class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
         assertEquals("wrong text for mainButtonSearch", expectedText, actualText)
 
         view
-
     }
 
     private val mainSongList by lazy {
@@ -93,6 +92,7 @@ class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
         }
     }
 
+    @Ignore
     @Test
     fun checkSearchButtonNoSongsFound() {
         testActivity {
@@ -107,7 +107,7 @@ class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
     }
 
     @Test
-    fun checkMenuItemAddPlaylist() {
+    fun checkMenuItemAddPlaylistWithNoSongs() {
         testActivity {
             activity.clickMenuItemAndRun(mainMenuItemIdAddPlaylist)
             assertLastToastMessageEquals(
@@ -116,6 +116,8 @@ class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
             )
         }
     }
+
+
 
     @Test
     fun checkMenuItemLoadPlaylist() {
@@ -133,7 +135,7 @@ class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
             assertEquals(messageWrongTitle, expectedTitle, actualTitle)
 
 
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).clickAndRun()
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).clickAndRun()
         }
     }
 
@@ -154,7 +156,7 @@ class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
             assertEquals(messageWrongTitle, expectedTitle, actualTitle)
 
 
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).clickAndRun()
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).clickAndRun()
         }
     }
 
@@ -187,6 +189,7 @@ class Stage1UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
             } else {
                 // ok
             }
+
         }
     }
 

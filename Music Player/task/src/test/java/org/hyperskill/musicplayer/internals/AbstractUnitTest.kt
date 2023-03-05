@@ -18,7 +18,7 @@ import org.robolectric.shadows.ShadowLooper
 import org.robolectric.shadows.ShadowToast
 import java.time.Duration
 
-// version 1.2.2
+// version 1.3
 abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
 
     /**

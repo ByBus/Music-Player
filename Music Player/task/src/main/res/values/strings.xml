@@ -10,4 +10,14 @@
     <string name="choose_playlist_to_load">choose playlist to load</string>
     <string name="choose_playlist_to_delete">choose playlist to delete</string>
     <string name="no_songs_found">no songs found</string>
+    <string name="play_button">play button</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="playlist_name">Playlist Name</string>
+    <string name="add_playlist_name">Add a name to your playlist</string>
+    <string name="add_atleast_one_song">Add at least one song to your playlist</string>
+    <string name="playlist_name_is_reserved">All Songs is a reserved name choose another playlist name</string>
+    <string name="reserved_playlist_name">All Songs</string>
 </resources>

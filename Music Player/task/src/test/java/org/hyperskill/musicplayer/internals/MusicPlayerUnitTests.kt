@@ -26,7 +26,7 @@ import java.util.Collections.max
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-// version 1.2.3
+// version 1.3
 open class MusicPlayerUnitTests<T : Activity>(clazz: Class<T>): AbstractUnitTest<T>(clazz) {
 
 
@@ -328,7 +328,7 @@ open class MusicPlayerUnitTests<T : Activity>(clazz: Class<T>): AbstractUnitTest
 
                 var itemView = listView.findViewHolderForAdapterPosition(i)!!.itemView
 
-                val checkBox =
+                var checkBox =
                     itemView.findViewByString<CheckBox>("songSelectorItemCheckBox")
 
                 assertEquals(
@@ -340,6 +340,7 @@ open class MusicPlayerUnitTests<T : Activity>(clazz: Class<T>): AbstractUnitTest
                 itemView.clickAndRun(5)
 
                 itemView = listView.findViewHolderForAdapterPosition(i)!!.itemView
+                checkBox = itemView.findViewByString<CheckBox>("songSelectorItemCheckBox")
 
                 assertEquals(
                     "songSelectorItemCheckBox should be checked after clicks on the list item",

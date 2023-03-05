@@ -1,4 +1,4 @@
-package org.hyperskill.musicplayer
+package org.hyperskill.musicplayer.ui
 
 import android.content.Context
 import android.widget.Toast
