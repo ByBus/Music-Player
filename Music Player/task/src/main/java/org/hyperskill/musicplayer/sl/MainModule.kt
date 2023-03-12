@@ -1,38 +1,49 @@
 package org.hyperskill.musicplayer.sl
 
-import org.hyperskill.musicplayer.data.PlayerStateCache
-import org.hyperskill.musicplayer.data.PlaylistDataSource
-import org.hyperskill.musicplayer.data.SongDataSource
-import org.hyperskill.musicplayer.data.SongRepository
+import android.content.Context
+import org.hyperskill.musicplayer.data.*
+import org.hyperskill.musicplayer.ui.Communication
+import org.hyperskill.musicplayer.domain.PlaybackState
 import org.hyperskill.musicplayer.domain.PlayerStateMapper
 import org.hyperskill.musicplayer.domain.usecase.*
+import org.hyperskill.musicplayer.player.AudioPlayer
+import org.hyperskill.musicplayer.player.PeriodicHandler
+import org.hyperskill.musicplayer.ui.mapper.PlaybackMapper
 import org.hyperskill.musicplayer.ui.SharedViewModel
+import org.hyperskill.musicplayer.ui.mapper.StringFormatter
 
-class MainModule : Module<SharedViewModel> {
+class MainModule(context: Context) : Module<SharedViewModel> {
     private val provideRepository by lazy {
-        SongRepository(SongDataSource(), PlaylistDataSource())
+        SongRepository(TestSongDataSource(TestAudioFileProvider(context, "wisdom.mp3")), PlaylistDataSource())
     }
     private val provideStateCache by lazy {
         PlayerStateCache()
     }
-    private val provideMapper = PlayerStateMapper.ToUiState()
+
+    private val providePlaybackCommunication by lazy { Communication.Base<PlaybackState>() }
+    private val providePlayer by lazy { AudioPlayer(context, providePlaybackCommunication, PeriodicHandler(100)) }
+    private val provideUiStateMapper = PlayerStateMapper.ToUiState()
+    private val providePlaybackUiMapper = PlaybackMapper.ToUi(StringFormatter.MillisToTime())
 
     override fun viewModel(): SharedViewModel {
         return SharedViewModel(
             HandleItemClickUseCase(
-                PlayOrPauseTrackUseCase(provideStateCache),
+                PlayOrPauseTrackUseCase(provideStateCache, providePlayer),
                 AddSongToSelectionUseCase(provideStateCache),
                 provideStateCache
             ),
-            LoadAllSongsUseCase(provideRepository, provideStateCache),
+            LoadAllSongsUseCase(provideRepository, provideStateCache, providePlayer),
             DeletePlaylistUseCase(provideRepository, provideStateCache),
-            LoadPlaylistSongsUseCase(provideRepository, provideStateCache),
-            StopCurrentTrackUseCase(provideStateCache),
+            LoadPlaylistSongsUseCase(provideRepository, provideStateCache, providePlayer),
+            StopCurrentTrackUseCase(provideStateCache, providePlayer),
             ChangePlayerModeUseCase(provideStateCache),
             ReturnToPlayStateUseCase(provideRepository, provideStateCache),
+            SetSongProgressUseCase(providePlayer),
             CreatePlaylistUseCase(provideRepository, provideStateCache),
             provideStateCache,
-            provideMapper
+            provideUiStateMapper,
+            providePlaybackUiMapper,
+            providePlaybackCommunication
         )
     }
 }

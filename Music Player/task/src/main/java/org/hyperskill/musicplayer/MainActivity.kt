@@ -8,8 +8,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.hyperskill.musicplayer.databinding.ActivityMainBinding
-import org.hyperskill.musicplayer.ui.SongMapper
+import org.hyperskill.musicplayer.ui.mapper.SongMapper
 import org.hyperskill.musicplayer.ui.*
+import org.hyperskill.musicplayer.ui.mapper.StringFormatter
+import org.hyperskill.musicplayer.ui.mapper.UiStateMapper
 
 class MainActivity : AppCompatActivity() {
     private val uiStateToFragmentMapper = UiStateMapper.ToFragment()
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onLongClick(id: Long) = viewModel.handleLongClick(id)
             },
-            SongMapper.DurationMapper()
+            SongMapper.DurationMapper(StringFormatter.MillisToTime())
         )
         binding.mainSongList.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -43,6 +45,10 @@ class MainActivity : AppCompatActivity() {
             playlistAdapter.update(it)
             setBottomController(it)
             preparePlaylistDialogs(it)
+        }
+
+        viewModel.playbackUiState.observe(this) {
+            it.complete(viewModel)
         }
 
         viewModel.singleMessage.observe(this) {

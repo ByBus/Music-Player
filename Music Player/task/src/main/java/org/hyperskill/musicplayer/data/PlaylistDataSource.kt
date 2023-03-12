@@ -3,33 +3,37 @@ package org.hyperskill.musicplayer.data
 import org.hyperskill.musicplayer.domain.Playlist
 
 
-class PlaylistDataSource {
+class PlaylistDataSource : MutableDataSource<Playlist, Long, Long>{
     private val playlists = mutableListOf<Playlist>()
 
-    fun readAll(): List<Playlist> = playlists.toList()
+    override fun readAll(): List<Playlist> = playlists.toList()
 
-    fun findById(id: Long): Playlist? = playlists.firstOrNull { it.id == id }
+    override fun findById(id: Long): Playlist? = playlists.firstOrNull { it.id == id }
 
-    fun findByName(name: String): Playlist? = playlists.firstOrNull { it.title == name }
+    override fun findByName(name: String): Playlist? = playlists.firstOrNull { it.title == name }
 
-    fun deleteById(id: Long) {
+    override fun deleteById(id: Long) {
         findById(id)?.let{
             playlists.remove(it)
         }
     }
 
-    fun update(id: Long, songsIds: List<Long>): Playlist? {
-        findById(id)?.let {
+    override fun update(item: Playlist, data: List<Long>): Playlist? {
+        findById(item.id)?.let {
             val index = playlists.indexOf(it)
             val oldPlaylist = playlists[index]
-            playlists[index] = oldPlaylist.copy(songsIds = songsIds, default = oldPlaylist.default)
+            playlists[index] = oldPlaylist.copy(songsIds = data)
             return playlists[index]
         }
         return null
     }
 
-    fun create(playlist: Playlist): Playlist {
-        playlists.add(playlist)
-        return playlist
+    override fun save(item: Playlist): Playlist {
+        playlists.add(item)
+        return item
+    }
+
+    override fun findByIds(ids: List<Long>): List<Playlist> {
+        return playlists.filter { it.id in ids }
     }
 }

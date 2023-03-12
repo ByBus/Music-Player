@@ -5,8 +5,8 @@ import org.hyperskill.musicplayer.domain.Repository
 import org.hyperskill.musicplayer.domain.Song
 
 class SongRepository(
-    private val songDataSource: SongDataSource,
-    private val playlistDataSource: PlaylistDataSource
+    private val songDataSource: DataSource<Song, Long>,
+    private val playlistDataSource: MutableDataSource<Playlist, Long, Long>
 ) : Repository {
     private var id = 1L
     override fun playlists() = playlistDataSource.readAll()
@@ -22,16 +22,16 @@ class SongRepository(
     override fun addSongsToPlaylist(playlist: Playlist, songs: List<Song>) {
         playlistDataSource.findById(playlist.id)?.let {
             val songsIds = (it.songsIds + songs.map { s -> s.id }).distinct()
-            playlistDataSource.update(it.id, songsIds)
+            playlistDataSource.update(playlist, songsIds)
         }
     }
 
     override fun createPlaylist(title: String, songsIds: List<Long>, default: Boolean): Playlist {
         val oldPlaylist = playlistDataSource.findByName(title)
         if (oldPlaylist != null) {
-            return playlistDataSource.update(oldPlaylist.id, songsIds)  ?: oldPlaylist
+            return playlistDataSource.update(oldPlaylist, songsIds)  ?: oldPlaylist
         }
         val playlist = Playlist(id++, title, songsIds, default)
-        return playlistDataSource.create(playlist)
+        return playlistDataSource.save(playlist)
     }
 }

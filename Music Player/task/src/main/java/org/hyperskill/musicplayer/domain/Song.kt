@@ -1,6 +1,7 @@
 package org.hyperskill.musicplayer.domain
 
-import org.hyperskill.musicplayer.ui.SongMapper
+import android.net.Uri
+import org.hyperskill.musicplayer.ui.mapper.SongMapper
 
 data class Song(
     val id: Long,
@@ -8,7 +9,8 @@ data class Song(
     val artist: String,
     val duration: Long,
     private var selected: Boolean = false,
-    var trackState: TrackState = TrackState.STOPPED
+    var trackState: TrackState = TrackState.STOPPED,
+    val filepath: Uri = Uri.EMPTY,
 ) {
     fun <T> map(mapper: SongMapper<T>): T {
         return mapper(id, title, artist, duration, selected, isPlaying())

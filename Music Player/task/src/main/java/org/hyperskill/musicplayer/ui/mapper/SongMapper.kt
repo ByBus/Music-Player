@@ -1,7 +1,7 @@
-package org.hyperskill.musicplayer.ui
+package org.hyperskill.musicplayer.ui.mapper
 
 import org.hyperskill.musicplayer.domain.Mode
-import java.util.concurrent.TimeUnit
+import org.hyperskill.musicplayer.ui.SongUi
 
 interface SongMapper<T> {
     operator fun invoke(
@@ -13,7 +13,7 @@ interface SongMapper<T> {
         playing: Boolean,
     ): T
 
-    class DurationMapper : SongMapper<String> {
+    class DurationMapper(private val formatter: StringFormatter<Long>) : SongMapper<String> {
         override fun invoke(
             id: Long,
             title: String,
@@ -22,12 +22,7 @@ interface SongMapper<T> {
             selected: Boolean,
             playing: Boolean,
         ): String {
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(duration)
-            return String.format(
-                "%02d:%02d",
-                minutes,
-                TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(minutes)
-            )
+            return formatter.format(duration)
         }
     }
 

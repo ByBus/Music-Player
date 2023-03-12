@@ -4,5 +4,5 @@ import android.app.Application
 import org.hyperskill.musicplayer.sl.DependencyContainer
 
 class MediaPlayerApp : Application() {
-    val dependencyContainer by lazy {DependencyContainer.Base()}
+    val dependencyContainer by lazy {DependencyContainer.Base(this)}
 }
