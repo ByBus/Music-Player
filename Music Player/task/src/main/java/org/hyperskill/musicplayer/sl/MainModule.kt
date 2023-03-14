@@ -22,7 +22,7 @@ class MainModule(context: Context) : Module<SharedViewModel> {
 
     private val providePlaybackCommunication by lazy { Communication.Base<PlaybackState>() }
     private val providePlayer by lazy { AudioPlayer(context, providePlaybackCommunication, PeriodicHandler(100)) }
-    private val provideUiStateMapper = PlayerStateMapper.ToUiState()
+    private val provideUiStateMapper = PlayerStateMapper.ToUi()
     private val providePlaybackUiMapper = PlaybackMapper.ToUi(StringFormatter.MillisToTime())
 
     override fun viewModel(): SharedViewModel {

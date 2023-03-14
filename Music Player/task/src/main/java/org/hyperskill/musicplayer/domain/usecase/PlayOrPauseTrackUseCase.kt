@@ -3,11 +3,11 @@ package org.hyperskill.musicplayer.domain.usecase
 import org.hyperskill.musicplayer.domain.InMemoryCache
 import org.hyperskill.musicplayer.domain.PlayerState
 import org.hyperskill.musicplayer.domain.UseCase
-import org.hyperskill.musicplayer.domain.PlayerController
+import org.hyperskill.musicplayer.domain.Player
 
 class PlayOrPauseTrackUseCase(
     private val playerState: InMemoryCache<PlayerState>,
-    private val player: PlayerController
+    private val player: Player
 ) : UseCase<Long, PlayerState> {
     override fun invoke(data: Long): PlayerState {
         val state = playerState.read()

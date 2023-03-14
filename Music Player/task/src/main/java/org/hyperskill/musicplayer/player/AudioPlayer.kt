@@ -6,7 +6,7 @@ import android.media.MediaPlayer
 import android.os.Build
 import androidx.annotation.RequiresApi
 import org.hyperskill.musicplayer.domain.PlaybackState
-import org.hyperskill.musicplayer.domain.PlayerController
+import org.hyperskill.musicplayer.domain.Player
 import org.hyperskill.musicplayer.domain.Song
 import org.hyperskill.musicplayer.ui.Communication
 
@@ -14,9 +14,8 @@ class AudioPlayer(
     private val appContext: Context,
     private val playbackState: Communication.Update<PlaybackState>,
     private var progressWatcher: Worker
-) : PlayerController, MediaPlayerCombinedListener {
+) : Player, MediaPlayerCombinedListener {
     private var mediaPlayer: MediaPlayer? = null
-    private var stopped: Boolean = true
     private var playAfterPrepare: Boolean = true
     private var duration: Long = 0L
     private val position: Long
@@ -34,29 +33,25 @@ class AudioPlayer(
 
     override fun pauseOrPlay() {
         mediaPlayer?.let { player ->
-            when {
-                stopped -> player.prepareAsync()// play
-                player.isPlaying -> {           // pause
-                    progressWatcher.interrupt()
-                    player.pause()
-                }
-                else -> { // play
-                    player.start()
-                    prepareWatcher()
-                    progressWatcher.start()
-                }
+            if (player.isPlaying) {           // pause
+                progressWatcher.interrupt()
+                player.pause()
+            }
+            else { // play
+                player.start()
+                prepareWatcher()
+                progressWatcher.start()
             }
         }
     }
 
     override fun stop() {
+        mediaPlayer?.pause()
         seek(0)
-        stopped = true
         progressWatcher.interrupt()
     }
 
     override fun dispose() {
-        onCompletion(mediaPlayer)
         progressWatcher.interrupt()
         mediaPlayer?.release()
         mediaPlayer = null
@@ -82,14 +77,12 @@ class AudioPlayer(
             setOnPreparedListener(this@AudioPlayer)
             setOnCompletionListener(this@AudioPlayer)
             setOnSeekCompleteListener(this@AudioPlayer)
-//            setDataSource(appContext, input.filepath)
-//            prepareAsync()
         }
     }
 
     override fun onPrepared(mp: MediaPlayer) {
-        stopped = false
         prepareWatcher()
+        seek(0)
         if (playAfterPrepare) {
             mp.start()
             progressWatcher.start()
@@ -105,7 +98,6 @@ class AudioPlayer(
 
     override fun onSeekComplete(mp: MediaPlayer) {
         produceState()
-        if (stopped) mp.stop()
     }
 
     private fun produceState() = playbackState.update(PlaybackState(position, duration))

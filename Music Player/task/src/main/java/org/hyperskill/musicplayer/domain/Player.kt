@@ -1,7 +1,7 @@
 package org.hyperskill.musicplayer.domain
 
 
-interface PlayerController {
+interface Player {
     fun playSong(song: Song)
     fun seek(ms: Long)
     fun pauseOrPlay()

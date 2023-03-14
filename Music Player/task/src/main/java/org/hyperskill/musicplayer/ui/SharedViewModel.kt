@@ -29,8 +29,8 @@ class SharedViewModel(
     private val _singleMessage = SingleEvent<String>()
     val singleMessage: LiveData<String> = _singleMessage
 
-    val playbackUiState: LiveData<PlaybackStateUi> = playbackCommunication.map { seek ->
-        seek.map(playbackUiMapper)
+    val playbackUiState: LiveData<PlaybackStateUi> = playbackCommunication.map { state ->
+        state.map(playbackUiMapper)
     }
 
     fun handleClick(id: Long) = updateUiState { handleItemClickUseCase(id) }
@@ -67,14 +67,11 @@ class SharedViewModel(
     }
 
     override fun onCompletion() {
-        with(cache) {
-            save(
-                read().apply {
-                    currentTrack.stop()
-                }
-            )
+        updateUiState {
+            with(cache) {
+                save(read().apply { currentTrack.stop() })
+            }
         }
-        updateUiState { cache.read() }
     }
 }
 

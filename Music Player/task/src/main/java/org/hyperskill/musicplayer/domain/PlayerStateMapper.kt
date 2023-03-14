@@ -13,7 +13,7 @@ interface PlayerStateMapper<T> {
         allSongs: List<Song>
     ): T
 
-    class ToUiState : PlayerStateMapper<UiState> {
+    class ToUi : PlayerStateMapper<UiState> {
         override fun invoke(
             currentTrack: Song,
             mode: Mode,
@@ -29,7 +29,7 @@ interface PlayerStateMapper<T> {
                 val isSelected = song.id in selected
                 updatedSongs.add(song.copy(trackState = state, selected = isSelected))
             }
-            val songMapper = SongMapper.SongToUiMapper(mode)
+            val songMapper = SongMapper.ToUi(mode)
             val uiSongs = updatedSongs.map { it.map(songMapper) }
             return UiState(mode, uiSongs, playlists)
         }

@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             setBottomController(it)
             preparePlaylistDialogs(it)
         }
-
         viewModel.playbackUiState.observe(this) {
             it.complete(viewModel)
         }

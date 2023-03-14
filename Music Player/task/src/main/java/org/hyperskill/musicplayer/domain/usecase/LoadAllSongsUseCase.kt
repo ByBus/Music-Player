@@ -5,7 +5,7 @@ import org.hyperskill.musicplayer.domain.*
 class LoadAllSongsUseCase(
     private val repository: Repository,
     private val playerState: InMemoryCache<PlayerState>,
-    private val player: PlayerController
+    private val player: Player
 ) : UseCase<String, PlayerState> {
     override fun invoke(data: String): PlayerState {
         val state = playerState.read()

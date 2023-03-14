@@ -26,7 +26,7 @@ interface SongMapper<T> {
         }
     }
 
-    class SongToUiMapper(private val mode: Mode) : SongMapper<SongUi> {
+    class ToUi(private val mode: Mode) : SongMapper<SongUi> {
         override fun invoke(
             id: Long,
             title: String,
