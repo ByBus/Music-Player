@@ -3,13 +3,12 @@ package org.hyperskill.musicplayer.data
 import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
-import org.hyperskill.musicplayer.domain.Song
 
-class LocalSongDataSource(private val context: Context) : DataSource<Song, Long> {
+class LocalSongDataSource(private val context: Context) : DataSource<SongDB, Long> {
     private val contentResolver get() = context.contentResolver
-    private val songs = mutableSetOf<Song>()
+    private val songs = mutableSetOf<SongDB>()
 
-    override fun readAll(): List<Song> {
+    override fun readAll(): List<SongDB> {
         val queryFields =
             arrayOf(
                 MediaStore.Audio.Media._ID,
@@ -29,27 +28,27 @@ class LocalSongDataSource(private val context: Context) : DataSource<Song, Long>
         cursor?.use {
             while (it.moveToNext()) {
                 val id = it.getLong(0)
-                songs.add(Song(
+                songs.add(SongDB(
                     id = id,
                     title = it.getString(1),
                     artist = it.getString(2),
                     duration = it.getLong(3),
-                    filepath = ContentUris.withAppendedId(externalContentUri, id)
+                    path = ContentUris.withAppendedId(externalContentUri, id).toString()
                 ))
             }
         }
         return songs.toList()
     }
 
-    override fun findById(id: Long): Song? {
+    override fun findById(id: Long): SongDB? {
         return songs.firstOrNull { it.id == id }
     }
 
-    override fun findByIds(ids: List<Long>): List<Song> {
+    override fun findByIds(ids: List<Long>): List<SongDB> {
         return songs.filter { it.id in ids }
     }
 
-    override fun findByName(name: String): Song? {
+    override fun findByName(name: String): SongDB? {
         return songs.firstOrNull { it.title == name }
     }
 }

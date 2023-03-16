@@ -32,6 +32,10 @@ data class Song(
     }
 
     fun isPlaying() = trackState == TrackState.PLAYING
+
+    fun matches(other: Song?): Boolean {
+        return other != null && this.id == other.id
+    }
 }
 
 enum class TrackState {

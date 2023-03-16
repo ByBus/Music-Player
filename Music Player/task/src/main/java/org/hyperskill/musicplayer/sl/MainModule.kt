@@ -14,7 +14,7 @@ import org.hyperskill.musicplayer.ui.mapper.StringFormatter
 
 class MainModule(context: Context) : Module<SharedViewModel> {
     private val provideRepository by lazy {
-        SongRepository(LocalSongDataSource(context), PlaylistDataSource())
+        SongRepository(LocalSongDataSource(context), PlaylistDataSource(), SongDBMapper.ToDomain())
     }
     private val provideStateCache by lazy {
         PlayerStateCache()
@@ -26,15 +26,17 @@ class MainModule(context: Context) : Module<SharedViewModel> {
     private val providePlaybackUiMapper = PlaybackMapper.ToUi(StringFormatter.MillisToTime())
 
     override fun viewModel(): SharedViewModel {
+        val loadPlaylistSongsUseCase =
+            LoadPlaylistSongsUseCase(provideRepository, provideStateCache, providePlayer)
         return SharedViewModel(
             HandleItemClickUseCase(
                 PlayOrPauseTrackUseCase(provideStateCache, providePlayer),
                 AddSongToSelectionUseCase(provideStateCache),
                 provideStateCache
             ),
-            LoadAllSongsUseCase(provideRepository, provideStateCache, providePlayer),
+            LoadAllSongsUseCase(provideRepository, loadPlaylistSongsUseCase),
             DeletePlaylistUseCase(provideRepository, provideStateCache),
-            LoadPlaylistSongsUseCase(provideRepository, provideStateCache, providePlayer),
+            loadPlaylistSongsUseCase,
             StopCurrentTrackUseCase(provideStateCache, providePlayer),
             ChangePlayerModeUseCase(provideStateCache),
             ReturnToPlayStateUseCase(provideRepository, provideStateCache),
