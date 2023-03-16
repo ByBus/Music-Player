@@ -14,13 +14,22 @@ class LoadAllSongsUseCase(
             Mode.PLAY_MUSIC -> repository.createPlaylist(title = data, songs.map { it.id }, true)
             Mode.ADD_PLAYLIST -> state.currentPlaylist
         }
+        val newCurrentTrack =
+            if (songs.contains(state.currentTrack)) {
+                state.currentTrack
+            } else {
+                songs.firstOrNull()
+            }
         with(state) {
             allSongs = songs
             playlists = repository.playlists()
             currentPlaylist = newCurrentPlaylist
-            currentTrack = songs.first()
+            newCurrentTrack?.let {
+                currentTrack = it
+                player.prepare(it, playAfter = false)
+            }
         }
-        player.prepare(state.currentTrack, playAfter = false)
         return playerState.save(state)
+//        return LoadPlaylistSongsUseCase(repository, playerState, player).invoke(newCurrentPlaylist)
     }
 }

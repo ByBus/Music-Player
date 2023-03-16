@@ -14,7 +14,7 @@ import org.hyperskill.musicplayer.ui.mapper.StringFormatter
 
 class MainModule(context: Context) : Module<SharedViewModel> {
     private val provideRepository by lazy {
-        SongRepository(TestSongDataSource(TestAudioFileProvider(context, "wisdom.mp3")), PlaylistDataSource())
+        SongRepository(LocalSongDataSource(context), PlaylistDataSource())
     }
     private val provideStateCache by lazy {
         PlayerStateCache()

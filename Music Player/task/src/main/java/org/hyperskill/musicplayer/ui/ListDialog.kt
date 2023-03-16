@@ -19,4 +19,8 @@ class ListDialog(
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
+
+    fun copy(items: List<Playlist>, onConfirm: (Playlist) -> Unit = {}) : ListDialog {
+        return ListDialog(title, items, onConfirm)
+    }
 }

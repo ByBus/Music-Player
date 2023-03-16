@@ -1,9 +1,6 @@
 package org.hyperskill.musicplayer.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import org.hyperskill.musicplayer.domain.*
 import org.hyperskill.musicplayer.sl.DependencyContainer
 import org.hyperskill.musicplayer.ui.mapper.PlaybackMapper
@@ -23,7 +20,7 @@ class SharedViewModel(
     playbackUiMapper: PlaybackMapper<PlaybackStateUi>,
     playbackCommunication: Communication.Observe<PlaybackState>
 ) : ViewModel(), CompletionHandler {
-    private val _uiState = MutableLiveData(cache.read().map(uiMapper))
+    private val _uiState = SkipFirstEvent<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
     private val _singleMessage = SingleEvent<String>()

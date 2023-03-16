@@ -33,16 +33,17 @@
         app:layout_constraintBottom_toTopOf="@+id/songItemTvTitle"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Unknown Artist" />
+        tools:text="Hoobastank" />
 
     <TextView
         android:id="@+id/songItemTvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/smallHorizontalPadding"
+        app:layout_constraintTop_toBottomOf="@id/songItemTvArtist"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        tools:text="Song name" />
+        tools:text="Out of Control" />
 
     <TextView
         android:id="@+id/songItemTvDuration"

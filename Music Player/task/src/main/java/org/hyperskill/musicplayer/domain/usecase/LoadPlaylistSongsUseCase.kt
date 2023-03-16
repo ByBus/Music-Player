@@ -1,5 +1,6 @@
 package org.hyperskill.musicplayer.domain.usecase
 
+import android.util.Log
 import org.hyperskill.musicplayer.domain.*
 
 class LoadPlaylistSongsUseCase(
@@ -14,11 +15,13 @@ class LoadPlaylistSongsUseCase(
             Mode.ADD_PLAYLIST -> state.currentPlaylist
         }
         val songs = repository.songsOfPlaylist(data)
+        Log.d("LoadPlaylistSongs", "songs: $songs")
         val newCurrentTrack =
             if (songs.contains(state.currentTrack) || state.mode == Mode.ADD_PLAYLIST) {
                 state.currentTrack
             } else {
-                songs.first()
+                Log.d("LoadPlaylistSongs", "first: ${songs.first()}")
+                songs.first().apply { stop() }
             }
         if (state.currentTrack != newCurrentTrack) player.prepare(newCurrentTrack, false)
         with(state) {

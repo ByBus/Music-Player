@@ -20,7 +20,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.time.Duration
 
-// version 1.3
+// version 1.3.1
 @Config(shadows = [CustomMediaPlayerShadow::class, CustomShadowCountDownTimer::class])
 @RunWith(RobolectricTestRunner::class)
 class Stage3UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.java) {
@@ -461,7 +461,7 @@ class Stage3UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
 
             val controllerUi = mainFragmentContainer.getControllerViews()
 
-
+            CustomMediaPlayerShadow.wasResetOrRecreated = true  // consider first as already created
             mainSongList.assertListItems(songFakeList) { itemViewSupplier, position, song ->
                 CustomMediaPlayerShadow.setFakeSong(song)
                 val songItemImgBtnPlayPause =

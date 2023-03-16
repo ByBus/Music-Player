@@ -20,4 +20,5 @@
     <string name="add_atleast_one_song">Add at least one song to your playlist</string>
     <string name="playlist_name_is_reserved">All Songs is a reserved name choose another playlist name</string>
     <string name="reserved_playlist_name">All Songs</string>
+    <string name="songs_load_permission_rationale">Songs cannot be loaded without permission</string>
 </resources>
