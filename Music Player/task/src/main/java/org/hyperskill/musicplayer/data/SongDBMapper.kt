@@ -22,6 +22,5 @@ interface SongDBMapper<T> {
         ): Song {
             return Song(id, title, artist, duration, filepath = Uri.parse(path))
         }
-
     }
 }

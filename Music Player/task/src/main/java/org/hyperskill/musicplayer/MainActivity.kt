@@ -13,7 +13,7 @@ import org.hyperskill.musicplayer.ui.mapper.SongMapper
 import org.hyperskill.musicplayer.ui.mapper.StringFormatter
 import org.hyperskill.musicplayer.ui.mapper.UiStateMapper
 import org.hyperskill.musicplayer.ui.permission.Permission.ReadExternalStorageForSongs
-import org.hyperskill.musicplayer.ui.permission.PermissionManager
+import org.hyperskill.musicplayer.ui.permission.ActivityPermissionManager
 
 class MainActivity : AppCompatActivity() {
     private val uiStateToFragmentMapper = UiStateMapper.ToFragment()
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         SharedViewModelFactory((application as MediaPlayerApp).dependencyContainer)
     }
 
-    private val permissionManager = PermissionManager(this)
+    private val permissionManager = ActivityPermissionManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.uiState.observe(this) {
             if (it.songs.isEmpty()) viewModel.showMessage(getString(R.string.no_songs_found))
-            println(it.songs)
-            println()
             playlistAdapter.update(it)
             setBottomController(it)
             preparePlaylistDialogs(it)

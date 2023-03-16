@@ -34,7 +34,7 @@ class MainModule(context: Context) : Module<SharedViewModel> {
                 AddSongToSelectionUseCase(provideStateCache),
                 provideStateCache
             ),
-            LoadAllSongsUseCase(provideRepository, loadPlaylistSongsUseCase),
+            FindAllSongsInStorageUseCase(provideRepository, loadPlaylistSongsUseCase),
             DeletePlaylistUseCase(provideRepository, provideStateCache),
             loadPlaylistSongsUseCase,
             StopCurrentTrackUseCase(provideStateCache, providePlayer),

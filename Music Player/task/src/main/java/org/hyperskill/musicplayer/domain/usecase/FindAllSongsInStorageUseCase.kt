@@ -2,7 +2,7 @@ package org.hyperskill.musicplayer.domain.usecase
 
 import org.hyperskill.musicplayer.domain.*
 
-class LoadAllSongsUseCase(
+class FindAllSongsInStorageUseCase(
     private val repository: Repository,
     private val loadPlaylistSongsUseCase: UseCase<Playlist, PlayerState>
 ) : UseCase<String, PlayerState> {
