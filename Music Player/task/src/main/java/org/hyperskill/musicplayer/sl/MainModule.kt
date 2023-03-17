@@ -7,7 +7,7 @@ import org.hyperskill.musicplayer.domain.PlaybackState
 import org.hyperskill.musicplayer.domain.PlayerStateMapper
 import org.hyperskill.musicplayer.domain.usecase.*
 import org.hyperskill.musicplayer.player.AudioPlayer
-import org.hyperskill.musicplayer.player.PeriodicHandler
+import org.hyperskill.musicplayer.player.Worker
 import org.hyperskill.musicplayer.ui.mapper.PlaybackMapper
 import org.hyperskill.musicplayer.ui.SharedViewModel
 import org.hyperskill.musicplayer.ui.mapper.StringFormatter
@@ -21,7 +21,7 @@ class MainModule(context: Context) : Module<SharedViewModel> {
     }
 
     private val providePlaybackCommunication by lazy { Communication.Base<PlaybackState>() }
-    private val providePlayer by lazy { AudioPlayer(context, providePlaybackCommunication, PeriodicHandler(100)) }
+    private val providePlayer by lazy { AudioPlayer(context, providePlaybackCommunication, Worker.PeriodicHandler(100)) }
     private val provideUiStateMapper = PlayerStateMapper.ToUi()
     private val providePlaybackUiMapper = PlaybackMapper.ToUi(StringFormatter.MillisToTime())
 
