@@ -7,7 +7,7 @@ import org.hyperskill.musicplayer.domain.Playlist
 
 class ListDialog(
     private val title: String,
-    private val items: List<Playlist>,
+    private val items: MutableList<Playlist> = mutableListOf(),
     private val onConfirm: (Playlist) -> Unit = {}
 ) {
     fun show(context: Context) {
@@ -20,7 +20,8 @@ class ListDialog(
             .show()
     }
 
-    fun copy(items: List<Playlist>, onConfirm: (Playlist) -> Unit = {}) : ListDialog {
-        return ListDialog(title, items, onConfirm)
+    fun items(newItems: List<Playlist>) {
+        items.clear()
+        items.addAll(newItems)
     }
 }

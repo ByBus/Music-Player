@@ -18,7 +18,7 @@ import org.hyperskill.musicplayer.ui.permission.ActivityPermissionManager
 class MainActivity : AppCompatActivity() {
     private val uiStateToFragmentMapper = UiStateMapper.ToFragment()
     private lateinit var selectPlaylistDialog: ListDialog
-    private lateinit var deletePlaylistDialog : ListDialog
+    private lateinit var deletePlaylistDialog: ListDialog
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<SharedViewModel>() {
         SharedViewModelFactory((application as MediaPlayerApp).dependencyContainer)
@@ -31,13 +31,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        selectPlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_load), emptyList())
-        deletePlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_delete), emptyList())
+        selectPlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_load)) {
+            viewModel.loadSongsOfPlaylist(it)
+        }
+        deletePlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_delete)) {
+            viewModel.deletePlaylist(it)
+        }
 
         val playlistAdapter = PlaylistAdapter(
             object : PlaylistAdapter.ClickListener {
                 override fun onClick(id: Long) = viewModel.handleClick(id)
-
                 override fun onLongClick(id: Long) = viewModel.handleLongClick(id)
             },
             SongMapper.DurationMapper(StringFormatter.MillisToTime())
@@ -70,14 +73,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun preparePlaylistDialogs(uiState: UiState) {
-        selectPlaylistDialog =
-            selectPlaylistDialog.copy(uiState.playlists) {
-                viewModel.loadSongsOfPlaylist(it)
-            }
-        deletePlaylistDialog = deletePlaylistDialog.copy(
-            uiState.playlists.filterNot { it.default }) {
-            viewModel.deletePlaylist(it)
-        }
+        selectPlaylistDialog.items(uiState.playlists)
+        deletePlaylistDialog.items(uiState.playlists.filterNot { it.default })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
