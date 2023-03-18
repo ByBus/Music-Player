@@ -1,10 +1,10 @@
 package org.hyperskill.musicplayer.sl
 
 import android.content.Context
+import androidx.room.Room
 import org.hyperskill.musicplayer.data.*
-import org.hyperskill.musicplayer.data.sql.PlaylistMapper
-import org.hyperskill.musicplayer.data.sql.DbHelper
-import org.hyperskill.musicplayer.data.sql.PlaylistStore
+import org.hyperskill.musicplayer.data.room.AppDataBase
+import org.hyperskill.musicplayer.data.room.PlaylistDbLocalDataSource
 import org.hyperskill.musicplayer.domain.Finalizer
 import org.hyperskill.musicplayer.domain.PlaybackState
 import org.hyperskill.musicplayer.domain.PlayerStateMapper
@@ -17,18 +17,18 @@ import org.hyperskill.musicplayer.ui.mapper.PlaybackMapper
 import org.hyperskill.musicplayer.ui.mapper.StringFormatter
 
 class MainModule(context: Context) : Module<SharedViewModel> {
-    private val provideDB by lazy {
-        DbHelper(context, "musicPlayerDatabase.db")
+    private val provideRoom by lazy {
+        Room.databaseBuilder(
+            context,
+            AppDataBase::class.java, "musicPlayerDatabase.db"
+        ).allowMainThreadQueries().build()
     }
-    private val playlistDao = PlaylistStore(provideDB.writableDatabase)
 
     private val provideRepository by lazy {
         SongRepository(
             LocalSongDataSource(context),
-            PlayListLocalDataSource(
-                playlistDao,
-                PlaylistMapper.ToDB(),
-                PlaylistMapper.ToDomain()
+            PlaylistDbLocalDataSource(
+                provideRoom.dao()
             ),
             InMemoryDefaultPlayListDataSource(),
             SongDBMapper.ToDomain()
@@ -70,7 +70,7 @@ class MainModule(context: Context) : Module<SharedViewModel> {
             provideUiStateMapper,
             providePlaybackUiMapper,
             providePlaybackCommunication,
-            Finalizer.ResourceReleaser(providePlayer, playlistDao)
+            Finalizer.ResourceReleaser(providePlayer)
         )
     }
 }

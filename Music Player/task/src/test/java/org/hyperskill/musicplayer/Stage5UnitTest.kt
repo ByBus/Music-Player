@@ -28,8 +28,8 @@ class Stage5UnitTest : MusicPlayerUnitTests<MainActivity>(MainActivity::class.ja
         const val columnSongId = "songId"
         const val columnPlaylistName = "playlistName"
         const val createQuery = "CREATE TABLE IF NOT EXISTS $tableName(" +
-                "$columnPlaylistName TEXT, " +
-                "$columnSongId INTEGER, " +
+                "$columnPlaylistName TEXT NOT NULL, " +
+                "$columnSongId INTEGER NOT NULL, " +
                 "PRIMARY KEY($columnPlaylistName, $columnSongId));"
 
         const val mainMenuItemIdAddPlaylist = "mainMenuAddPlaylist"
