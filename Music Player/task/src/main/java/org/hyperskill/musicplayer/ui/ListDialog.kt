@@ -7,8 +7,8 @@ import org.hyperskill.musicplayer.domain.Playlist
 
 class ListDialog(
     private val title: String,
-    private val items: MutableList<Playlist> = mutableListOf(),
-    private val onConfirm: (Playlist) -> Unit = {}
+    private var items: List<Playlist>,
+    private val onConfirm: (Playlist) -> Unit
 ) {
     fun show(context: Context) {
         AlertDialog.Builder(context)
@@ -21,7 +21,6 @@ class ListDialog(
     }
 
     fun items(newItems: List<Playlist>) {
-        items.clear()
-        items.addAll(newItems)
+        items = newItems.toList()
     }
 }

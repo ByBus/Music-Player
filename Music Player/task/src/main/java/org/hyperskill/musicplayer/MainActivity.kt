@@ -31,10 +31,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        selectPlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_load)) {
+        selectPlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_load), emptyList()) {
             viewModel.loadSongsOfPlaylist(it)
         }
-        deletePlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_delete)) {
+
+        deletePlaylistDialog = ListDialog(getString(R.string.choose_playlist_to_delete), emptyList()) {
             viewModel.deletePlaylist(it)
         }
 
@@ -45,18 +46,21 @@ class MainActivity : AppCompatActivity() {
             },
             SongMapper.DurationMapper(StringFormatter.MillisToTime())
         )
+
         binding.mainSongList.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = playlistAdapter
-            itemAnimator = null
+//            itemAnimator = null
         }
 
         viewModel.uiState.observe(this) {
-            if (it.songs.isEmpty()) viewModel.showMessage(getString(R.string.no_songs_found))
+            it.checkForWarning(viewModel, getString(R.string.no_songs_found))
             playlistAdapter.update(it)
             setBottomController(it)
-            preparePlaylistDialogs(it)
+            selectPlaylistDialog.items(it.playlists)
+            deletePlaylistDialog.items(it.userPlaylists)
         }
+
         viewModel.playbackUiState.observe(this) {
             it.complete(viewModel)
         }
@@ -72,11 +76,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun preparePlaylistDialogs(uiState: UiState) {
-        selectPlaylistDialog.items(uiState.playlists)
-        deletePlaylistDialog.items(uiState.playlists.filterNot { it.default })
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.playlist_options_menu, menu)
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.mainMenuAddPlaylist -> {
                 if (binding.mainSongList.childCount == 0) {
-                    viewModel.showMessage(getString(R.string.no_songs_loaded))
+                    viewModel.handleMessage(getString(R.string.no_songs_loaded))
                 } else {
                     viewModel.selectionState()
                 }

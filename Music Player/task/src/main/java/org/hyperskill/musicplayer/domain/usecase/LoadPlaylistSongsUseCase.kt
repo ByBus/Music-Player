@@ -24,6 +24,7 @@ class LoadPlaylistSongsUseCase(
         with(state) {
             allSongs = songs
             currentPlaylist = newCurrentPlaylist
+            playlists = repository.playlists()
             newCurrentTrack?.let {
                 if (state.currentTrack.matches(it).not()) player.prepare(it, false)
                 currentTrack = it

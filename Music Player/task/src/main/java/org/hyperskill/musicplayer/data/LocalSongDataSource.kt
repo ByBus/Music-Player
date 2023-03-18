@@ -4,7 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 
-class LocalSongDataSource(private val context: Context) : DataSource<SongDB, Long> {
+class LocalSongDataSource(private val context: Context) : MultiIdsDataSource<SongDB, Long> {
     private val contentResolver get() = context.contentResolver
     private val songs = mutableSetOf<SongDB>()
 

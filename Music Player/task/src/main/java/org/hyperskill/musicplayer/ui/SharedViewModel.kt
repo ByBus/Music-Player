@@ -18,9 +18,10 @@ class SharedViewModel(
     private val cache: InMemoryCache<PlayerState>,
     private val uiMapper: PlayerStateMapper<UiState>,
     playbackUiMapper: PlaybackMapper<PlaybackStateUi>,
-    playbackCommunication: Communication.Observe<PlaybackState>
-) : ViewModel(), CompletionHandler {
-    private val _uiState = SkipFirstEvent<UiState>()
+    playbackCommunication: Communication.Observe<PlaybackState>,
+    private val resourcesFinalizer: Finalizer
+) : ViewModel(), CompletionHandler, MessageHandler {
+    private val _uiState = MutableLiveData(cache.read().map(uiMapper))
     val uiState: LiveData<UiState> = _uiState
 
     private val _singleMessage = SingleEvent<String>()
@@ -40,8 +41,8 @@ class SharedViewModel(
 
     fun selectionState() = updateUiState { changePlayerModeUseCase() }
 
-    fun showMessage(message: String) {
-        _singleMessage.value = message
+    override fun handleMessage(text: String) {
+        _singleMessage.value = text
     }
 
     fun createPlaylist(name: String) = updateUiState { createPlaylistUseCase(name) }
@@ -69,6 +70,11 @@ class SharedViewModel(
                 save(read().apply { currentTrack.stop() })
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        resourcesFinalizer.finalizeAll()
     }
 }
 

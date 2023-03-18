@@ -23,13 +23,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="48dp" />
+        app:layout_constraintGuide_begin="@dimen/items_guide_left_position" />
 
     <TextView
         android:id="@+id/songItemTvArtist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/smallHorizontalPadding"
+        style="@style/artist"
         app:layout_constraintBottom_toTopOf="@+id/songItemTvTitle"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,18 +35,15 @@
 
     <TextView
         android:id="@+id/songItemTvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/smallHorizontalPadding"
-        app:layout_constraintTop_toBottomOf="@id/songItemTvArtist"
+        style="@style/song_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@id/songItemTvArtist"
         tools:text="Out of Control" />
 
     <TextView
         android:id="@+id/songItemTvDuration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/song_duration"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
