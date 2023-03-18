@@ -8,7 +8,7 @@ class FindAllSongsInStorageUseCase(
 ) : UseCase<String, PlayerState> {
     override fun invoke(data: String): PlayerState {
         val songs = repository.allSongs()
-        val newCurrentPlaylist = repository.createPlaylist(title = data, songs.map { it.id }, true)
-        return loadPlaylistSongsUseCase(newCurrentPlaylist)
+        val newPlaylist = repository.createPlaylist(title = data, songs.map { it.id }, true)
+        return loadPlaylistSongsUseCase(newPlaylist)
     }
 }

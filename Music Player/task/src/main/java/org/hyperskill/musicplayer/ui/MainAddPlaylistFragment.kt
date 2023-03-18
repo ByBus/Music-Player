@@ -41,7 +41,7 @@ class MainAddPlaylistFragment : Fragment() {
                     return@setOnClickListener
                 }
             }
-            viewModel.showMessage(getString(messageId))
+            viewModel.handleMessage(getString(messageId))
         }
     }
 

@@ -5,35 +5,42 @@ import org.hyperskill.musicplayer.domain.Repository
 import org.hyperskill.musicplayer.domain.Song
 
 class SongRepository(
-    private val songDataSource: DataSource<SongDB, Long>,
-    private val playlistDataSource: MutableDataSource<Playlist, Long, Long>,
+    private val songDataSource: MultiIdsDataSource<SongDB, Long>,
+    private val playlistDataSource: MutableDataSource<Playlist, String>,
+    private val localPlaylistDataSource: DataSource<Playlist, Long>,
     private val mapper: SongDBMapper<Song>
 ) : Repository {
-    private var id = 1L
-    override fun playlists() = playlistDataSource.readAll()
+    private var needToInit = true
 
-    override fun songsOfPlaylist(playlist: Playlist) =
-        songDataSource.findByIds(playlist.songsIds).map { it.map(mapper) }
+    override fun playlists() = localPlaylistDataSource.readAll() + playlistDataSource.readAll()
+
+    override fun songsOfPlaylist(playlist: Playlist): List<Song> {
+        if (needToInit && playlist.default.not()) {
+            allSongs()
+            needToInit = false
+        }
+        if (playlist.default) {
+            needToInit = false
+            return allSongs()
+        }
+        return songDataSource.findByIds(playlist.songsIds).map { it.map(mapper) }
+    }
 
     override fun allSongs() = songDataSource.readAll().map { it.map(mapper) }
 
     override fun deletePlaylist(playlist: Playlist) {
-        playlistDataSource.deleteById(playlist.id)
-    }
-
-    override fun addSongsToPlaylist(playlist: Playlist, songs: List<Song>) {
-        playlistDataSource.findById(playlist.id)?.let {
-            val songsIds = (it.songsIds + songs.map { s -> s.id }).distinct()
-            playlistDataSource.update(playlist, songsIds)
-        }
+        playlistDataSource.deleteById(playlist.title)
     }
 
     override fun createPlaylist(title: String, songsIds: List<Long>, default: Boolean): Playlist {
+        if (default) return localPlaylistDataSource.findByName(title)!!
+
         val oldPlaylist = playlistDataSource.findByName(title)
         if (oldPlaylist != null) {
-            return playlistDataSource.update(oldPlaylist, songsIds) ?: oldPlaylist
+            val item = oldPlaylist.copy(songsIds = songsIds)
+            return playlistDataSource.update(item) ?: item
         }
-        val playlist = Playlist(id++, title, songsIds, default)
+        val playlist = Playlist(0, title, songsIds)
         return playlistDataSource.save(playlist)
     }
 }

@@ -2,13 +2,19 @@ package org.hyperskill.musicplayer.data
 
 import org.hyperskill.musicplayer.domain.*
 
-class PlayerStateCache : InMemoryCache<PlayerState> {
+class PlayerStateCache(repository: ReadRepository) : InMemoryCache<PlayerState> {
     private var currentTrack: Song = Song(-1L, "", "", 0)
     private var mode: Mode = Mode.PLAY_MUSIC
     private var currentPlaylist: Playlist = Playlist(-1, "", emptyList())
     private var playlists: List<Playlist> = emptyList()
     private var selectedSongs: MutableSet<Long> = mutableSetOf()
     private var allSongs: List<Song> = emptyList()
+
+    private var firstRead = true
+
+    init {
+        playlists = repository.playlists()
+    }
 
     override fun read(): PlayerState {
         return PlayerState(
@@ -17,8 +23,11 @@ class PlayerStateCache : InMemoryCache<PlayerState> {
             currentPlaylist = currentPlaylist,
             playlists = playlists,
             selectedSongs = selectedSongs,
-            allSongs = allSongs
-        )
+            allSongs = allSongs,
+            isInitial = firstRead
+        ).also {
+            firstRead = false
+        }
     }
 
     override fun save(data: PlayerState): PlayerState {

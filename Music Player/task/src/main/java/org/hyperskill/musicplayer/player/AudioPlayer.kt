@@ -9,12 +9,13 @@ import org.hyperskill.musicplayer.domain.PlaybackState
 import org.hyperskill.musicplayer.domain.Player
 import org.hyperskill.musicplayer.domain.Song
 import org.hyperskill.musicplayer.ui.Communication
+import java.io.Closeable
 
 class AudioPlayer(
     private val appContext: Context,
     private val playbackState: Communication.Update<PlaybackState>,
     private var progressWatcher: Worker
-) : Player, MediaPlayerCombinedListener {
+) : Player, MediaPlayerCombinedListener, Closeable {
     private var mediaPlayer: MediaPlayer? = null
     private var playAfterPrepare: Boolean = true
     private var duration: Long = 0L
@@ -101,4 +102,6 @@ class AudioPlayer(
     }
 
     private fun produceState() = playbackState.update(PlaybackState(position, duration))
+
+    override fun close() = dispose()
 }

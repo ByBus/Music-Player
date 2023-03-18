@@ -10,7 +10,8 @@ interface PlayerStateMapper<T> {
         currentPlaylist: Playlist,
         playlists: List<Playlist>,
         selectedSongs: MutableSet<Long>,
-        allSongs: List<Song>
+        allSongs: List<Song>,
+        initial: Boolean
     ): T
 
     class ToUi : PlayerStateMapper<UiState> {
@@ -20,7 +21,8 @@ interface PlayerStateMapper<T> {
             currentPlaylist: Playlist,
             playlists: List<Playlist>,
             selectedSongs: MutableSet<Long>,
-            allSongs: List<Song>
+            allSongs: List<Song>,
+            initial: Boolean
         ): UiState {
             val selected = allSongs.map { it.id }.intersect(selectedSongs)
             val updatedSongs = mutableListOf<Song>()
@@ -31,7 +33,10 @@ interface PlayerStateMapper<T> {
             }
             val songMapper = SongMapper.ToUi(mode)
             val uiSongs = updatedSongs.map { it.map(songMapper) }
-            return UiState(mode, uiSongs, playlists)
+            return if (initial)
+                UiState.Initial(mode, uiSongs, playlists)
+            else
+                UiState.Base(mode, uiSongs, playlists)
         }
     }
 }
